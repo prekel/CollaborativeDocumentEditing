@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{8FF58560-0EB9-489E-8661-33445358AC42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cde", "Cde\Cde.csproj", "{41206A20-6896-4B12-AF62-A7383DA06CB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8FF58560-0EB9-489E-8661-33445358AC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FF58560-0EB9-489E-8661-33445358AC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FF58560-0EB9-489E-8661-33445358AC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FF58560-0EB9-489E-8661-33445358AC42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41206A20-6896-4B12-AF62-A7383DA06CB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41206A20-6896-4B12-AF62-A7383DA06CB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41206A20-6896-4B12-AF62-A7383DA06CB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41206A20-6896-4B12-AF62-A7383DA06CB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
