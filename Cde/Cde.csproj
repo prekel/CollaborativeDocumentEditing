@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-Cde-E745F5D0-D494-4E0A-B225-1FC94ED7F4C0</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
