@@ -47,17 +47,15 @@ namespace Cde.Pages
             return Page();
         }
 
-        [BindProperty]
-        public CreateUpdateCommand? UpdateCommand { get; set; }
 
-        public async Task<IActionResult> OnPostCommentAsync(int id)
+        private async Task<IActionResult> ProceedCommand(long projectId, UpdateCommand command)
         {
-            if (UpdateCommand is null || !ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return Page();
+                return RedirectToPage("/Projects/Project", projectId);
             }
 
-            var p = await _projectService.GetProjectWithParticipants(id);
+            var p = await _projectService.GetProjectWithParticipants(projectId);
             var authResult = await _authService.AuthorizeAsync(User, p, nameof(IsProjectParticipant));
             if (!authResult.Succeeded)
             {
@@ -65,9 +63,34 @@ namespace Cde.Pages
             }
 
             var user = await _userService.GetUserAsync(User);
-            await _projectService.CreateUpdate(p.ProjectId, UpdateCommand, user);
+            await _projectService.CreateUpdate(p.ProjectId, command, user);
 
-            return RedirectToPage("/Project", id);
+            return RedirectToPage("/Projects/Project", projectId);
+        }
+
+
+        // [BindProperty]
+        public CommentCommand? CommentCommand { get; set; } = null!;
+
+        public async Task<IActionResult> OnPostCommentAsync(long id, CommentCommand? CommentCommand)
+        {
+            return await ProceedCommand(id, CommentCommand);
+        }
+
+        // [BindProperty]
+        public FileCommand? FileCommand { get; set; } = null!;
+
+        public async Task<IActionResult> OnPostFileAsync(int id, FileCommand? FileCommand)
+        {
+            return await ProceedCommand(id, FileCommand);
+        }
+
+        // [BindProperty]
+        public FileTextCommand? FileTextCommand { get; set; } = null!;
+
+        public async Task<IActionResult> OnPostFileTextAsync(int id, FileTextCommand? FileTextCommand)
+        {
+            return await ProceedCommand(id, FileTextCommand);
         }
     }
 }

@@ -1,0 +1,12 @@
+@model Cde.Models.CommentCommand
+
+<form asp-page-handler="Comment" method="post">
+    <div class="form-group">
+        <label asp-for="CommentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CommentText" class="form-control"/>
+            <span asp-validation-for="CommentText" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Comment</button>
+</form>

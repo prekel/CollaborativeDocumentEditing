@@ -56,18 +56,18 @@ namespace Cde.Services
                 .SingleAsync();
         }
 
-        public async Task<Document> CreateDocumentFromFileAsBlob(CreateUpdateCommand update)
+        public async Task<Document> CreateDocumentFromFileAsBlob(FileCommand fileCommand)
         {
-            if (update.DocumentFile is null)
+            if (fileCommand.DocumentFile is null)
             {
-                throw new NullReferenceException(nameof(update.DocumentFile));
+                throw new NullReferenceException(nameof(fileCommand.DocumentFile));
             }
 
             await using var memoryStream = new MemoryStream();
-            await update.DocumentFile.CopyToAsync(memoryStream);
+            await fileCommand.DocumentFile.CopyToAsync(memoryStream);
 
             // Upload the file if less than 5 MB
-            if (memoryStream.Length >= 5 * 1024 * 2024)
+            if (memoryStream.Length >= 5 * 1024 * 1024)
             {
                 throw new ApplicationException("File is larger than 5 MB");
             }
@@ -76,9 +76,8 @@ namespace Cde.Services
 
             var d = new Document
             {
-                // TODO IsText
-                IsText = false,
-                Filename = update.DocumentFile.FileName,
+                IsText = (bool) fileCommand.IsText,
+                Filename = fileCommand.FileName ?? fileCommand.DocumentFile.FileName,
                 Blob = blob
             };
 
@@ -87,44 +86,41 @@ namespace Cde.Services
             return d;
         }
 
-        public async Task<Document> CreateDocumentFromTextAsBlob(CreateUpdateCommand update)
+        public async Task<Document> CreateDocumentFromTextAsBlob(FileTextCommand textCommand)
         {
-            if (update.DocumentText is null)
+            if (textCommand.DocumentText is null)
             {
-                throw new NullReferenceException(nameof(update.DocumentText));
+                throw new NullReferenceException(nameof(textCommand.DocumentText));
             }
 
             var d = new Document
             {
                 IsText = true,
-                Filename = update.CommentText,
-                Blob = System.Text.Encoding.UTF8.GetBytes(update.DocumentText)
+                Filename = textCommand.FileName,
+                Blob = System.Text.Encoding.UTF8.GetBytes(textCommand.DocumentText)
             };
             _dbContext.Add(d);
             await _dbContext.SaveChangesAsync();
             return d;
         }
 
-        public async Task<Update> CreateUpdate(long projectId, CreateUpdateCommand update,
+        public async Task<Update> CreateUpdate(long projectId, UpdateCommand updateCommand,
             ApplicationUser createdBy)
         {
             var p = await _dbContext.Projects
                 .Include(pr => pr.Updates)
                 .SingleAsync(pr => pr.ProjectId == projectId);
 
-            Document? d = null;
-            if (update.DocumentFile is not null)
+            var d = updateCommand switch
             {
-                d = await CreateDocumentFromFileAsBlob(update);
-            }
-            else if (update.DocumentText is not null)
-            {
-                d = await CreateDocumentFromTextAsBlob(update);
-            }
+                FileCommand fileCommand => await CreateDocumentFromFileAsBlob(fileCommand),
+                FileTextCommand textCommand => await CreateDocumentFromTextAsBlob(textCommand),
+                _ => null
+            };
 
             var ret = new Update
             {
-                CommentText = update.CommentText,
+                CommentText = updateCommand.CommentText,
                 DocumentId = d?.DocumentId,
                 ProjectId = projectId,
                 AuthorId = createdBy.Id,
