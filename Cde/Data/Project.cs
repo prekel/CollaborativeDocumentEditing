@@ -11,7 +11,7 @@ namespace Cde.Data
 
         public ApplicationUser Owner { get; set; } = null!;
 
-        public ICollection<ApplicationUser> InvitedParticipants { get; set; } = null!;
+        public ICollection<ApplicationUser>? InvitedParticipants { get; set; } 
 
         public ICollection<Update> Updates { get; set; } = null!;
     }

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Cde.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -14,9 +10,9 @@ namespace Cde.Data
         {
         }
 
-        public DbSet<Document> Documents { get; set; }
-        public DbSet<Update> Updates { get; set; }
-        public DbSet<Project> Projects { get; set; }
+        public DbSet<Document> Documents { get; set; } = null!;
+        public DbSet<Update> Updates { get; set; } = null!;
+        public DbSet<Project> Projects { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,9 +31,12 @@ namespace Cde.Data
                 builder.Property(e => e.CommentText)
                     .IsRequired();
                 builder.HasOne(e => e.Document)
-                    .WithOne(d => d.Update)
+                    .WithOne(d => d!.Update)
                     .HasForeignKey<Update>(e => e.DocumentId)
                     .IsRequired(false);
+                builder.HasOne(e => e.Author)
+                    .WithOne()
+                    .HasForeignKey<Update>(e => e.AuthorId);
             });
             modelBuilder.Entity<Project>(builder =>
             {

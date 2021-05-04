@@ -12,9 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 using Cde.Data;
 using Cde.Services;
+using Cde.Authorization;
 
 namespace Cde
 {
@@ -26,6 +28,7 @@ namespace Cde
         }
 
         public IConfiguration Configuration { get; }
+        private IHostEnvironment CurrentEnvironment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,21 +36,35 @@ namespace Cde
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging();
+                if (CurrentEnvironment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
             });
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddScoped<ProjectService>();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddRazorPages();
+
+            services.AddScoped<ProjectService>();
+
+            services.AddScoped<IAuthorizationHandler, IsProjectParticipantHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(nameof(IsProjectParticipant),
+                    policyBuilder => policyBuilder
+                        .AddRequirements(new IsProjectParticipant()));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            CurrentEnvironment = env;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
