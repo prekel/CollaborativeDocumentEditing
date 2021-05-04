@@ -18,7 +18,7 @@
     }
 </ul>
 
-<form asp-page-handler="Comment">
+<form enctype="multipart/form-data" method="post">
     <div class="form-group">
         <label asp-for="UpdateCommand.CommentText" class="col-md-2 control-label"></label>
         <div class="col-md-10">
@@ -26,5 +26,20 @@
             <span asp-validation-for="UpdateCommand.CommentText" class="text-danger"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Comment</button>
+    <div class="form-group">
+        <label asp-for="UpdateCommand.DocumentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="UpdateCommand.DocumentText" class="form-control"/>
+            <span asp-validation-for="UpdateCommand.DocumentText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="UpdateCommand.DocumentFile" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="UpdateCommand.DocumentFile" class="form-control"/>
+            <span asp-validation-for="UpdateCommand.DocumentFile" class="text-danger"></span>
+        </div>
+    </div>
+    <input asp-page-handler="Comment" class="btn" type="submit" value="Comment"/>
+    @* <button type="submit" class="btn btn-primary">Comment</button> *@
 </form>

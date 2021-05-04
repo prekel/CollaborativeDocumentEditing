@@ -33,7 +33,7 @@ namespace Cde.Pages
 
         public async Task OnGetAsync()
         {
-            Projects = await _projectService.GetProjects(await _userService.GetUserAsync(User));
+            Projects = await _projectService.GetProjectsFor(await _userService.GetUserAsync(User));
         }
     }
 }

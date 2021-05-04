@@ -42,20 +42,21 @@ namespace Cde.Pages
 
             var user = await _userService.GetUserAsync(User);
             Project = new ProjectViewModel(p, user.Id == p.OwnerId);
-            Updates = await _projectService.GetUpdates(id, await _userService.GetUserAsync(User));
+            Updates = await _projectService.GetUpdatesWithDocumentInfo(id, await _userService.GetUserAsync(User));
 
             return Page();
         }
 
         [BindProperty]
-        public CreateUpdateCommand UpdateCommand { get; set; }
-        
+        public CreateUpdateCommand? UpdateCommand { get; set; }
+
         public async Task<IActionResult> OnPostCommentAsync(int id)
         {
-            if (!ModelState.IsValid)
+            if (UpdateCommand is null || !ModelState.IsValid)
             {
                 return Page();
             }
+
             var p = await _projectService.GetProjectWithParticipants(id);
             var authResult = await _authService.AuthorizeAsync(User, p, nameof(IsProjectParticipant));
             if (!authResult.Succeeded)
@@ -65,7 +66,7 @@ namespace Cde.Pages
 
             var user = await _userService.GetUserAsync(User);
             await _projectService.CreateUpdate(p.ProjectId, UpdateCommand, user);
-                        
+
             return RedirectToPage("/Project", id);
         }
     }
