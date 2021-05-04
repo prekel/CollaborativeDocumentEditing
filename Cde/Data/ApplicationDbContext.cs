@@ -7,12 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cde.Data
 {
-    public class ApplicationDbContext : DbContext // : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            //: base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<Update> Updates { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
