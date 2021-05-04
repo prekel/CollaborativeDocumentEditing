@@ -6,12 +6,12 @@ namespace Cde.Data
 
         public bool IsText { get; set; }
 
-        public string Filename { get; set; }
+        public string Filename { get; set; } = null!;
 
         public string? S3Link { get; set; }
 
         public byte[]? Blob { get; set; }
 
-        public Update Update { get; set; }
+        public Update Update { get; set; } = null!;
     }
 }

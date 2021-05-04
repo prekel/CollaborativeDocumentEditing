@@ -3,36 +3,23 @@ using System;
 using Cde.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Cde.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504125936_DocumentOwner")]
+    partial class DocumentOwner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-            modelBuilder.Entity("ApplicationUserProject", b =>
-                {
-                    b.Property<string>("InvitedParticipantsId")
-                        .HasColumnType("text");
-
-                    b.Property<long>("InvitedProjectsProjectId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("InvitedParticipantsId", "InvitedProjectsProjectId");
-
-                    b.HasIndex("InvitedProjectsProjectId");
-
-                    b.ToTable("ApplicationUserProject");
-                });
 
             modelBuilder.Entity("Cde.Data.ApplicationUser", b =>
                 {
@@ -304,21 +291,6 @@ namespace Cde.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("ApplicationUserProject", b =>
-                {
-                    b.HasOne("Cde.Data.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("InvitedParticipantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cde.Data.Project", null)
-                        .WithMany()
-                        .HasForeignKey("InvitedProjectsProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Cde.Data.Project", b =>

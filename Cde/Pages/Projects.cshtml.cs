@@ -19,10 +19,10 @@ namespace Cde.Pages
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ProjectService _projectService;
-        private readonly UserManager<IdentityUser> _userService;
+        private readonly UserManager<ApplicationUser> _userService;
 
         public ProjectsModel(ApplicationDbContext dbContext, ProjectService projectService,
-            UserManager<IdentityUser> userService)
+            UserManager<ApplicationUser> userService)
         {
             _dbContext = dbContext;
             _projectService = projectService;

@@ -10,10 +10,11 @@ namespace Cde.Models
 
         public bool IsOwner { get; set; }
 
-        public ProjectViewModel(Data.Project project)
+        public ProjectViewModel(Data.Project project, bool isOwner)
         {
             ProjectId = project.ProjectId;
             Name = project.Name;
+            IsOwner = isOwner;
         }
     }
 }

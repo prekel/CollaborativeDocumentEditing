@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Cde.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -46,6 +46,11 @@ namespace Cde.Data
                 builder.HasMany(entity => entity.Updates)
                     .WithOne(update => update.Project)
                     .HasForeignKey(update => update.ProjectId);
+                builder.HasOne(e => e.Owner)
+                    .WithMany()
+                    .HasForeignKey(project => project.OwnerId);
+                builder.HasMany(e => e.InvitedParticipants)
+                    .WithMany(p => p.InvitedProjects);
             });
         }
     }

@@ -21,9 +21,11 @@ namespace Cde.Services
             _dbContext = context;
         }
 
-        public async Task<ICollection<ProjectViewModel>> GetProjects(IdentityUser createdBy)
+        public async Task<ICollection<ProjectViewModel>> GetProjects(ApplicationUser createdBy)
         {
-            return await _dbContext.Projects.Select(p1 => new ProjectViewModel(p1)).ToListAsync();
+            return await _dbContext.Projects
+                .Select(p1 => new ProjectViewModel(p1, p1.OwnerId == createdBy.Id))
+                .ToListAsync();
         }
     }
 }

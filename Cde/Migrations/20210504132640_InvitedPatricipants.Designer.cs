@@ -3,15 +3,17 @@ using System;
 using Cde.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Cde.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504132640_InvitedPatricipants")]
+    partial class InvitedPatricipants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,15 +23,15 @@ namespace Cde.Migrations
 
             modelBuilder.Entity("ApplicationUserProject", b =>
                 {
-                    b.Property<string>("InvitedParticipantsId")
+                    b.Property<string>("InvitedPatricipantsId")
                         .HasColumnType("text");
 
-                    b.Property<long>("InvitedProjectsProjectId")
+                    b.Property<long>("InvitedProjecsProjectId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("InvitedParticipantsId", "InvitedProjectsProjectId");
+                    b.HasKey("InvitedPatricipantsId", "InvitedProjecsProjectId");
 
-                    b.HasIndex("InvitedProjectsProjectId");
+                    b.HasIndex("InvitedProjecsProjectId");
 
                     b.ToTable("ApplicationUserProject");
                 });
@@ -310,13 +312,13 @@ namespace Cde.Migrations
                 {
                     b.HasOne("Cde.Data.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("InvitedParticipantsId")
+                        .HasForeignKey("InvitedPatricipantsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cde.Data.Project", null)
                         .WithMany()
-                        .HasForeignKey("InvitedProjectsProjectId")
+                        .HasForeignKey("InvitedProjecsProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
