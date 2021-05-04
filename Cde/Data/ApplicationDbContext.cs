@@ -36,7 +36,8 @@ namespace Cde.Data
                     .IsRequired();
                 builder.HasOne(e => e.Document)
                     .WithOne(d => d.Update)
-                    .HasForeignKey<Update>(e => e.DocumentId);
+                    .HasForeignKey<Update>(e => e.DocumentId)
+                    .IsRequired(false);
             });
             modelBuilder.Entity<Project>(builder =>
             {
