@@ -20,6 +20,7 @@ namespace Cde.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Document>(builder =>
             {
                 builder.HasKey(entity => entity.DocumentId);
@@ -40,7 +41,7 @@ namespace Cde.Data
             modelBuilder.Entity<Project>(builder =>
             {
                 builder.HasKey(entity => entity.ProjectId);
-                builder.HasOne(entity => entity.Name);
+                builder.Property(entity => entity.Name).IsRequired();
                 builder.HasMany(entity => entity.Updates)
                     .WithOne(update => update.Project)
                     .HasForeignKey(update => update.ProjectId);
