@@ -1,0 +1,13 @@
+@page "/Projects"
+@model Cde.Pages.ProjectsModel
+@{
+    ViewData["Title"] = "Projects";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Projects</p>
+
+@foreach (var i in Model.Projects)
+{
+    <li>@i</li>
+}
