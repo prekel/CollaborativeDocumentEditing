@@ -1,12 +1,20 @@
+using Cde.Data;
+
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Cde.Pages
 {
-    public class Project : PageModel
+    public class ProjectModel : PageModel
     {
-        public void OnGet()
+        public Project? Project { get; private set; }
+
+        public void OnGet(int id)
         {
-            
+            Project = new Project
+            {
+                ProjectId = id,
+                Name = $"Project {id}"
+            };
         }
     }
 }
