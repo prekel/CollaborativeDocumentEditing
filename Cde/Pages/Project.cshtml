@@ -17,3 +17,14 @@
         <li>@i</li>
     }
 </ul>
+
+<form asp-page-handler="Comment">
+    <div class="form-group">
+        <label asp-for="UpdateCommand.CommentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="UpdateCommand.CommentText" class="form-control"/>
+            <span asp-validation-for="UpdateCommand.CommentText" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Comment</button>
+</form>

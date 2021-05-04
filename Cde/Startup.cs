@@ -28,7 +28,7 @@ namespace Cde
         }
 
         public IConfiguration Configuration { get; }
-        private IHostEnvironment CurrentEnvironment { get; set; }
+        private IHostEnvironment? CurrentEnvironment { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,7 +36,7 @@ namespace Cde
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                if (CurrentEnvironment.IsDevelopment())
+                if (CurrentEnvironment is not null && CurrentEnvironment.IsDevelopment())
                 {
                     options.EnableSensitiveDataLogging();
                 }

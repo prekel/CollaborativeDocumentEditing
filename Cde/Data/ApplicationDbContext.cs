@@ -35,8 +35,8 @@ namespace Cde.Data
                     .HasForeignKey<Update>(e => e.DocumentId)
                     .IsRequired(false);
                 builder.HasOne(e => e.Author)
-                    .WithOne()
-                    .HasForeignKey<Update>(e => e.AuthorId);
+                    .WithMany()
+                    .HasForeignKey(e => e.AuthorId);
             });
             modelBuilder.Entity<Project>(builder =>
             {

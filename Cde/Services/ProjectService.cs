@@ -49,5 +49,20 @@ namespace Cde.Services
                 .Select(p1 => new ProjectViewModel(p1, p1.OwnerId == createdBy.Id))
                 .SingleAsync();
         }
+
+        public async Task CreateUpdate(long projectId, CreateUpdateCommand update, ApplicationUser createdBy)
+        {
+            var p = await _dbContext.Projects
+                .Include(pr => pr.Updates)
+                .SingleAsync(pr => pr.ProjectId == projectId);
+            p.Updates.Add(new Update()
+            {
+                CommentText = update.CommentText,
+                DocumentId = null,
+                ProjectId = projectId,
+                AuthorId = createdBy.Id
+            });
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

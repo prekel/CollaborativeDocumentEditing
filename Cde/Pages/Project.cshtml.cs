@@ -46,5 +46,27 @@ namespace Cde.Pages
 
             return Page();
         }
+
+        [BindProperty]
+        public CreateUpdateCommand UpdateCommand { get; set; }
+        
+        public async Task<IActionResult> OnPostCommentAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            var p = await _projectService.GetProjectWithParticipants(id);
+            var authResult = await _authService.AuthorizeAsync(User, p, nameof(IsProjectParticipant));
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+
+            var user = await _userService.GetUserAsync(User);
+            await _projectService.CreateUpdate(p.ProjectId, UpdateCommand, user);
+                        
+            return RedirectToPage("/Project", id);
+        }
     }
 }
