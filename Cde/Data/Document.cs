@@ -15,4 +15,3 @@ namespace Cde.Data
         public Update Update { get; set; }
     }
 }
-
