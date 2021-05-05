@@ -1,4 +1,4 @@
-@page "{id}/{handler?}"
+@page "{id}/{documentId?}"
 @model Cde.Pages.Projects.ProjectModel
 @{
     ViewData["Title"] = "Project";
@@ -12,7 +12,13 @@
 <ul>
     @foreach (var i in Model.Updates)
     {
-        <li>@i</li>
+        <li>
+            @i
+            @if (i.DocumentInfo is not null)
+            {
+                <a asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">document</a>
+            }
+        </li>
     }
 </ul>
 <p>Owner: </p>@Model.Project.OwnerEmail

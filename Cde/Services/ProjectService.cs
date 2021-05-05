@@ -214,5 +214,11 @@ namespace Cde.Services
             project.IsClosed = true;
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<Document?> GetDocument(long documentId)
+        {
+            return await _dbContext.Documents
+                .SingleOrDefaultAsync(doc => doc.DocumentId == documentId);
+        }
     }
 }

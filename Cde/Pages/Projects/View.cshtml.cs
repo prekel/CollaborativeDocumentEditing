@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 using Cde.Data;
@@ -30,6 +31,33 @@ namespace Cde.Pages.Projects
 
         public ProjectViewModel? Project { get; private set; } = null!;
         public ICollection<UpdateViewModel> Updates { get; private set; } = null!;
+
+
+        public async Task<IActionResult> OnGetDocumentAsync(long id, long documentId)
+        {
+            var user = await _userService.GetUserAsync(User);
+            var ar = await _projectService.IsUserHasAccess(id, user.Id);
+            if (!ar)
+            {
+                return Forbid();
+            }
+
+            var doc = await _projectService.GetDocument(documentId);
+
+            if (doc?.Blob is null)
+            {
+                return NotFound();
+            }
+
+            var blob = doc.Blob;
+
+            var res = new FileContentResult(blob,
+                doc.IsText
+                    ? MediaTypeNames.Text.Plain
+                    : MediaTypeNames.Application.Octet);
+
+            return res;
+        }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

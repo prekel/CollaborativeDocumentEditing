@@ -10,6 +10,6 @@ namespace Cde.Data
 {
     public class ApplicationUser : IdentityUser
     {
-        public ICollection<Project> InvitedProjects { get; set; } = null!;
+        public ICollection<Project>? InvitedProjects { get; set; }
     }
 }

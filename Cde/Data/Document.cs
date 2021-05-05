@@ -12,6 +12,6 @@ namespace Cde.Data
 
         public byte[]? Blob { get; set; }
 
-        public Update Update { get; set; } = null!;
+        public Update? Update { get; set; } 
     }
 }
