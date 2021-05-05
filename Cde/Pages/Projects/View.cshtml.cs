@@ -59,7 +59,11 @@ namespace Cde.Pages.Projects
             var res = new FileContentResult(blob,
                 doc.IsText
                     ? MediaTypeNames.Text.Plain
-                    : MediaTypeNames.Application.Octet);
+                    : MediaTypeNames.Application.Octet)
+            {
+                FileDownloadName = doc.Filename,
+                LastModified = doc.CreateTimestamp
+            };
 
             return res;
         }
@@ -83,7 +87,6 @@ namespace Cde.Pages.Projects
         {
             if (!ModelState.IsValid)
             {
-                // return Page();
                 return RedirectToPage("View", new {id});
             }
 
