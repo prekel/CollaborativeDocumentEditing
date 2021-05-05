@@ -9,10 +9,12 @@ namespace Cde.Data
 
         public string OwnerId { get; set; } = null!;
 
+        public bool IsClosed { get; set; }
+
         public ApplicationUser? Owner { get; set; }
 
-        public ICollection<ApplicationUser>? InvitedParticipants { get; set; } 
+        public ICollection<ApplicationUser>? InvitedParticipants { get; set; }
 
-        public ICollection<Update>? Updates { get; set; } 
+        public ICollection<Update>? Updates { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace Cde.Pages.Projects
 
         public ProjectViewModel? Project { get; private set; } = null!;
         public ICollection<UpdateViewModel> Updates { get; private set; } = null!;
-        
+
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var user = await _userService.GetUserAsync(User);
@@ -60,7 +61,11 @@ namespace Cde.Pages.Projects
                 return Forbid();
             }
 
-            await _projectService.CreateUpdate(id, inputModel, user);
+            var update = await _projectService.CreateUpdate(id, inputModel, user);
+            if (update is null)
+            {
+                return Forbid();
+            }
 
             return RedirectToPage("View", new {id});
         }
@@ -84,6 +89,30 @@ namespace Cde.Pages.Projects
         public async Task<IActionResult> OnPostFileTextAsync(int id, FileTextInputModel fileTextCommand)
         {
             return await ProceedCommand(id, fileTextCommand);
+        }
+
+        public async Task<IActionResult> OnPostCloseAsync(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToPage("View", new {id});
+            }
+
+            var project = await _projectService.GetProject(id);
+            if (project is null)
+            {
+                return RedirectToPage("View", new {id});
+            }
+
+            var user = await _userService.GetUserAsync(User);
+            if (project.OwnerId != user.Id)
+            {
+                return Forbid();
+            }
+
+            await _projectService.CloseProject(id);
+
+            return RedirectToPage("View", new {id});
         }
     }
 }

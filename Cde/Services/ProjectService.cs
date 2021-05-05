@@ -55,6 +55,14 @@ namespace Cde.Services
                 .AnyAsync(pr => pr.InvitedParticipants!.Any(ip => ip.Id == userId));
         }
 
+        public async Task<bool> IsUserEditHasAccess(long projectId, string userId)
+        {
+            return await _dbContext.Projects
+                .Include(p => p.InvitedParticipants)
+                .Where(pr => pr.ProjectId == projectId)
+                .AnyAsync(pr => pr.InvitedParticipants!.Any(ip => ip.Id == userId) || !pr.IsClosed);
+        }
+
         private async Task<Document> CreateDocumentFromFileAsBlob(FileInputModel fileInputModel)
         {
             if (fileInputModel.DocumentFile is null)
@@ -103,12 +111,17 @@ namespace Cde.Services
             return d;
         }
 
-        public async Task<Update> CreateUpdate(long projectId, UpdateInputModel updateInputModel,
+        public async Task<Update?> CreateUpdate(long projectId, UpdateInputModel updateInputModel,
             ApplicationUser createdBy)
         {
             var p = await _dbContext.Projects
                 .Include(pr => pr.Updates)
                 .SingleAsync(pr => pr.ProjectId == projectId);
+
+            if (p.IsClosed)
+            {
+                return null;
+            }
 
             var d = updateInputModel switch
             {
@@ -193,6 +206,13 @@ namespace Cde.Services
             await _dbContext.Projects.AddAsync(project);
             await _dbContext.SaveChangesAsync();
             return project;
+        }
+
+        public async Task CloseProject(long projectId)
+        {
+            var project = await _dbContext.Projects.SingleOrDefaultAsync(pr => pr.ProjectId == projectId);
+            project.IsClosed = true;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

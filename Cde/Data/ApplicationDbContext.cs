@@ -42,6 +42,7 @@ namespace Cde.Data
             {
                 builder.HasKey(entity => entity.ProjectId);
                 builder.Property(entity => entity.Name).IsRequired();
+                builder.Property(entity => entity.IsClosed).IsRequired();
                 builder.HasMany(entity => entity.Updates)
                     .WithOne(update => update.Project)
                     .HasForeignKey(update => update.ProjectId);

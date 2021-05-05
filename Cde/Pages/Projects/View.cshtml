@@ -24,15 +24,26 @@
     }
 </ul>
 
-<partial name="_CommentForm" model="Model.CommentCommand"/>
-
-<partial name="_FileForm" model="Model.FileTextCommand"/>
-
-<partial name="_FileTextForm" model="Model.FileTextCommand"/>
-
-@if (Model.Project.IsOwner)
+@if (Model.Project.IsClosed)
 {
-    <a asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
+    <p>Closed</p>
+}
+else
+{
+    <partial name="_CommentForm" model="Model.CommentCommand"/>
+
+    <partial name="_FileForm" model="Model.FileTextCommand"/>
+
+    <partial name="_FileTextForm" model="Model.FileTextCommand"/>
+
+    @if (Model.Project.IsOwner)
+    {
+        <a asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
+
+        <form asp-page-handler="Close" method="post">
+            <button type="submit" class="btn btn-primary">Close</button>
+        </form>
+    }
 }
 
 @section Scripts {
