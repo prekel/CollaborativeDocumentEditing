@@ -1,0 +1,77 @@
+@page
+@model Cde.Pages.Projects.CreateModel
+@{
+    ViewData["Title"] = "Create project";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form asp-page-handler="File" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="CreateFileInputModel.ProjectName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileInputModel.ProjectName" class="form-control"/>
+            <span asp-validation-for="CreateFileInputModel.ProjectName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileInputModel.CommentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileInputModel.CommentText" class="form-control"/>
+            <span asp-validation-for="CreateFileInputModel.CommentText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileInputModel.FileName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileInputModel.FileName" class="form-control"/>
+            <span asp-validation-for="CreateFileInputModel.FileName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileInputModel.IsText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileInputModel.IsText" class="form-control"/>
+            <span asp-validation-for="CreateFileInputModel.IsText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileInputModel.DocumentFile" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileInputModel.DocumentFile" class="form-control"/>
+            <span asp-validation-for="CreateFileInputModel.DocumentFile" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">File</button>
+</form>
+
+<form asp-page-handler="FileText" method="post">
+    <div class="form-group">
+        <label asp-for="CreateFileTextInputModel.ProjectName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileTextInputModel.ProjectName" class="form-control"/>
+            <span asp-validation-for="CreateFileTextInputModel.ProjectName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileTextInputModel.CommentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileTextInputModel.CommentText" class="form-control"/>
+            <span asp-validation-for="CreateFileTextInputModel.CommentText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileTextInputModel.FileName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileTextInputModel.FileName" class="form-control"/>
+            <span asp-validation-for="CreateFileTextInputModel.FileName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreateFileTextInputModel.DocumentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateFileTextInputModel.DocumentText" class="form-control"/>
+            <span asp-validation-for="CreateFileTextInputModel.DocumentText" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">FileText</button>
+</form>

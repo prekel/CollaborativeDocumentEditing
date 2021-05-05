@@ -1,0 +1,26 @@
+@model Cde.Models.FileTextInputModel
+
+<form asp-page-handler="FileText" method="post">
+    <div class="form-group">
+        <label asp-for="CommentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CommentText" class="form-control"/>
+            <span asp-validation-for="CommentText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="FileName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="FileName" class="form-control"/>
+            <span asp-validation-for="FileName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="DocumentText" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="DocumentText" class="form-control"/>
+            <span asp-validation-for="DocumentText" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">FileText</button>
+</form>

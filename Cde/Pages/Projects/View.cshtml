@@ -1,0 +1,57 @@
+@page "{id}/{documentId?}"
+@model Cde.Pages.Projects.ProjectModel
+@{
+    ViewData["Title"] = "Project";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>@Model.Project.Name</p>
+
+<p>@Model.Project</p>
+
+<ul>
+    @foreach (var i in Model.Updates)
+    {
+        <li>
+            @i
+            @if (i.DocumentInfo is not null)
+            {
+                <a asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">document</a>
+            }
+        </li>
+    }
+</ul>
+<p>Owner: </p>@Model.Project.OwnerEmail
+<p>Participants: </p>
+<ul>
+    @foreach (var p in Model.Project.ParticipantEmails)
+    {
+        <li>@p</li>
+    }
+</ul>
+
+@if (Model.Project.IsClosed)
+{
+    <p>Closed</p>
+}
+else
+{
+    <partial name="_CommentForm" model="Model.CommentCommand"/>
+
+    <partial name="_FileForm" model="Model.FileTextCommand"/>
+
+    <partial name="_FileTextForm" model="Model.FileTextCommand"/>
+
+    @if (Model.Project.IsOwner)
+    {
+        <a asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
+
+        <form asp-page-handler="Close" method="post">
+            <button type="submit" class="btn btn-primary">Close</button>
+        </form>
+    }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
