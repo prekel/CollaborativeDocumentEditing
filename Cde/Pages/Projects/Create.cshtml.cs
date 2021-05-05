@@ -23,23 +23,36 @@ namespace Cde.Pages.Projects
             _userService = userService;
         }
 
-        [BindProperty]
-        public CreateInputModel? CreateInputModel { get; set; }
-
         public void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public CreateFileInputModel? CreateFileInputModel { get; set; }
+
+        public async Task<IActionResult> OnPostFileAsync(CreateFileInputModel createFileInputModel)
         {
-            if (!ModelState.IsValid || CreateInputModel is null)
+            return await ProceedCreate(createFileInputModel);
+        }
+
+        public CreateFileTextInputModel? CreateFileTextInputModel { get; set; }
+
+        public async Task<IActionResult> OnPostFileTextAsync(CreateFileTextInputModel createFileTextInputModel)
+        {
+            return await ProceedCreate(createFileTextInputModel);
+        }
+
+        private async Task<IActionResult> ProceedCreate(UpdateInputModel initial)
+        {
+            if (!ModelState.IsValid)
             {
                 return RedirectToPage();
             }
 
             var user = await _userService.GetUserAsync(User);
 
-            var project = await _projectService.CreateProject(user, CreateInputModel);
+            var project = await _projectService.CreateProject(user, (ICreateFileInputModel) initial);
+
+            await _projectService.CreateUpdate(project.ProjectId, initial, user);
 
             return RedirectToPage("View", new {id = project.ProjectId});
         }

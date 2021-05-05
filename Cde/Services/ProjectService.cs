@@ -182,7 +182,7 @@ namespace Cde.Services
                     project.OwnerId == queriedById);
         }
 
-        public async Task<Project> CreateProject(ApplicationUser author, CreateInputModel createModel)
+        public async Task<Project> CreateProject(ApplicationUser author, ICreateFileInputModel createModel)
         {
             var project = new Project
             {

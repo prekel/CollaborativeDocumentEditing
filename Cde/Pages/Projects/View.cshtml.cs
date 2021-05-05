@@ -29,8 +29,7 @@ namespace Cde.Pages.Projects
 
         public ProjectViewModel? Project { get; private set; } = null!;
         public ICollection<UpdateViewModel> Updates { get; private set; } = null!;
-
-
+        
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var user = await _userService.GetUserAsync(User);
