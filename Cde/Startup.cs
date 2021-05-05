@@ -51,12 +51,12 @@ namespace Cde
 
             services.AddScoped<ProjectService>();
 
-            services.AddScoped<IAuthorizationHandler, IsProjectParticipantHandler>();
+            services.AddScoped<IAuthorizationHandler, IsProjectParticipantOrOwnerHandler>();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(nameof(IsProjectParticipant),
+                options.AddPolicy(nameof(IsProjectParticipantOrOwner),
                     policyBuilder => policyBuilder
-                        .AddRequirements(new IsProjectParticipant()));
+                        .AddRequirements(new IsProjectParticipantOrOwner()));
             });
         }
 

@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Cde.Models
 {
-    public record UpdateCommand
+    public abstract record UpdateInputModel
     {
         [Required, StringLength(100)]
         public string CommentText { get; set; }
     }
 
 
-    public record FileCommand : UpdateCommand
+    public record FileInputModel : UpdateInputModel
     {
         public bool IsText { get; set; }
 
@@ -22,7 +22,7 @@ namespace Cde.Models
     }
 
 
-    public record FileTextCommand : UpdateCommand
+    public record FileTextInputModel : UpdateInputModel
     {
         [Required]
         public string FileName { get; set; }
@@ -31,7 +31,7 @@ namespace Cde.Models
     }
 
 
-    public record CommentCommand : UpdateCommand
+    public record CommentInputModel : UpdateInputModel
     {
     }
 }

@@ -21,9 +21,10 @@ namespace Cde.Services
             _dbContext = context;
         }
 
-        public async Task<ICollection<ProjectViewModel>> GetProjectsFor(ApplicationUser createdBy)
+        public async Task<ICollection<ProjectViewModel>> GetProjectViewModels(ApplicationUser createdBy)
         {
             return await _dbContext.Projects
+                .Include(p => p.Owner)
                 .Include(p => p.InvitedParticipants)
                 .Where(p => p.OwnerId == createdBy.Id || p.InvitedParticipants!.Any(ip => ip.Id == createdBy.Id))
                 .Select(p1 => new ProjectViewModel(p1, p1.OwnerId == createdBy.Id))
@@ -56,15 +57,15 @@ namespace Cde.Services
                 .SingleAsync();
         }
 
-        public async Task<Document> CreateDocumentFromFileAsBlob(FileCommand fileCommand)
+        private async Task<Document> CreateDocumentFromFileAsBlob(FileInputModel fileInputModel)
         {
-            if (fileCommand.DocumentFile is null)
+            if (fileInputModel.DocumentFile is null)
             {
-                throw new NullReferenceException(nameof(fileCommand.DocumentFile));
+                throw new NullReferenceException(nameof(fileInputModel.DocumentFile));
             }
 
             await using var memoryStream = new MemoryStream();
-            await fileCommand.DocumentFile.CopyToAsync(memoryStream);
+            await fileInputModel.DocumentFile.CopyToAsync(memoryStream);
 
             // Upload the file if less than 5 MB
             if (memoryStream.Length >= 5 * 1024 * 1024)
@@ -76,8 +77,8 @@ namespace Cde.Services
 
             var d = new Document
             {
-                IsText = (bool) fileCommand.IsText,
-                Filename = fileCommand.FileName ?? fileCommand.DocumentFile.FileName,
+                IsText = fileInputModel.IsText,
+                Filename = fileInputModel.FileName ?? fileInputModel.DocumentFile.FileName,
                 Blob = blob
             };
 
@@ -86,41 +87,41 @@ namespace Cde.Services
             return d;
         }
 
-        public async Task<Document> CreateDocumentFromTextAsBlob(FileTextCommand textCommand)
+        private async Task<Document> CreateDocumentFromTextAsBlob(FileTextInputModel textInputModel)
         {
-            if (textCommand.DocumentText is null)
+            if (textInputModel.DocumentText is null)
             {
-                throw new NullReferenceException(nameof(textCommand.DocumentText));
+                throw new NullReferenceException(nameof(textInputModel.DocumentText));
             }
 
             var d = new Document
             {
                 IsText = true,
-                Filename = textCommand.FileName,
-                Blob = System.Text.Encoding.UTF8.GetBytes(textCommand.DocumentText)
+                Filename = textInputModel.FileName,
+                Blob = System.Text.Encoding.UTF8.GetBytes(textInputModel.DocumentText)
             };
             _dbContext.Add(d);
             await _dbContext.SaveChangesAsync();
             return d;
         }
 
-        public async Task<Update> CreateUpdate(long projectId, UpdateCommand updateCommand,
+        public async Task<Update> CreateUpdate(long projectId, UpdateInputModel updateInputModel,
             ApplicationUser createdBy)
         {
             var p = await _dbContext.Projects
                 .Include(pr => pr.Updates)
                 .SingleAsync(pr => pr.ProjectId == projectId);
 
-            var d = updateCommand switch
+            var d = updateInputModel switch
             {
-                FileCommand fileCommand => await CreateDocumentFromFileAsBlob(fileCommand),
-                FileTextCommand textCommand => await CreateDocumentFromTextAsBlob(textCommand),
+                FileInputModel fileCommand => await CreateDocumentFromFileAsBlob(fileCommand),
+                FileTextInputModel textCommand => await CreateDocumentFromTextAsBlob(textCommand),
                 _ => null
             };
 
             var ret = new Update
             {
-                CommentText = updateCommand.CommentText,
+                CommentText = updateInputModel.CommentText,
                 DocumentId = d?.DocumentId,
                 ProjectId = projectId,
                 AuthorId = createdBy.Id,
@@ -128,6 +129,55 @@ namespace Cde.Services
             p.Updates.Add(ret);
             await _dbContext.SaveChangesAsync();
             return ret;
+        }
+
+
+        public abstract record InviteParticipantResult
+        {
+            public record Ok : InviteParticipantResult;
+
+            public record AlreadyInvited : InviteParticipantResult;
+
+            public record UserNotExists : InviteParticipantResult;
+
+            public record ProjectNotExists : InviteParticipantResult;
+        }
+
+        public async Task<InviteParticipantResult> InviteParticipant(long projectId, string invitedEmail)
+        {
+            var project = await _dbContext.Projects
+                .Include(p => p.InvitedParticipants)
+                .SingleOrDefaultAsync(p => p.ProjectId == projectId);
+            if (project?.InvitedParticipants is null)
+            {
+                return new InviteParticipantResult.ProjectNotExists();
+            }
+
+            var invited = await _dbContext.Users
+                .SingleOrDefaultAsync(u => u.Email == invitedEmail);
+            if (invited is null)
+            {
+                return new InviteParticipantResult.UserNotExists();
+            }
+
+            var participants = project.InvitedParticipants;
+            if (participants.Any(p => p.Email == invitedEmail))
+            {
+                return new InviteParticipantResult.AlreadyInvited();
+            }
+
+            participants.Add(invited);
+            await _dbContext.SaveChangesAsync();
+            return new InviteParticipantResult.Ok();
+        }
+
+        public async Task<ProjectViewModel?> GetProjectViewModel(long projectId, string queriedById)
+        {
+            var project = await _dbContext.Projects
+                .Include(p => p.Owner)
+                .Include(p => p.InvitedParticipants)
+                .SingleOrDefaultAsync(p => p.ProjectId == projectId);
+            return project is null ? null : new ProjectViewModel(project, project.OwnerId == queriedById);
         }
     }
 }

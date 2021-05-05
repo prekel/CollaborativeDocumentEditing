@@ -9,19 +9,19 @@ using Cde.Data;
 
 namespace Cde.Authorization
 {
-    public class IsProjectParticipantHandler :
-        AuthorizationHandler<IsProjectParticipant, Project>
+    public class IsProjectParticipantOrOwnerHandler :
+        AuthorizationHandler<IsProjectParticipantOrOwner, Project>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public IsProjectParticipantHandler(UserManager<ApplicationUser> userManager)
+        public IsProjectParticipantOrOwnerHandler(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            IsProjectParticipant requirement,
+            IsProjectParticipantOrOwner requirement,
             Project resource)
         {
             var appUser = await _userManager.GetUserAsync(context.User);

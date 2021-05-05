@@ -12,7 +12,7 @@ using Cde.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cde.Pages
+namespace Cde.Pages.Projects
 {
     [Authorize]
     public class ProjectsModel : PageModel
@@ -33,7 +33,7 @@ namespace Cde.Pages
 
         public async Task OnGetAsync()
         {
-            Projects = await _projectService.GetProjectsFor(await _userService.GetUserAsync(User));
+            Projects = await _projectService.GetProjectViewModels(await _userService.GetUserAsync(User));
         }
     }
 }
