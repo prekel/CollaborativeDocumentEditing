@@ -1,3 +1,5 @@
+using System;
+
 using Cde.Data;
 
 namespace Cde.Models
@@ -15,6 +17,8 @@ namespace Cde.Models
 
         public string AuthorEmail { get; set; }
 
+        public DateTimeOffset CreateTimestamp { get; set; }
+
         public UpdateViewModel(Update update, Document? document, string authorEmail, bool isAuthor)
         {
             UpdateId = update.UpdateId;
@@ -23,6 +27,7 @@ namespace Cde.Models
             ProjectId = update.ProjectId;
             IsAuthor = isAuthor;
             AuthorEmail = authorEmail;
+            CreateTimestamp = update.CreateTimestamp;
         }
     }
 }

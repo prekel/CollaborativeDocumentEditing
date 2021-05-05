@@ -1,3 +1,5 @@
+using System;
+
 using Cde.Data;
 
 namespace Cde.Models
@@ -10,11 +12,14 @@ namespace Cde.Models
 
         public string Filename { get; set; } = null!;
 
+        public DateTimeOffset CreateTimestamp { get; set; }
+
         public DocumentInfoViewModel(Document document)
         {
             DocumentId = document.DocumentId;
             IsText = document.IsText;
             Filename = document.Filename;
+            CreateTimestamp = document.CreateTimestamp;
         }
     }
 }

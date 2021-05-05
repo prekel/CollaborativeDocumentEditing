@@ -1,3 +1,5 @@
+using System;
+
 namespace Cde.Data
 {
     public sealed record Document
@@ -8,10 +10,10 @@ namespace Cde.Data
 
         public string Filename { get; set; } = null!;
 
-        public string? S3Link { get; set; }
+        public byte[] Blob { get; set; } = null!;
 
-        public byte[]? Blob { get; set; }
+        public DateTimeOffset CreateTimestamp { get; set; }
 
-        public Update? Update { get; set; } 
+        public Update? Update { get; set; }
     }
 }

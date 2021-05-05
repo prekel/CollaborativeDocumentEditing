@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cde.Data
@@ -20,15 +22,23 @@ namespace Cde.Data
             modelBuilder.Entity<Document>(builder =>
             {
                 builder.HasKey(entity => entity.DocumentId);
-                builder.Property(entity => entity.IsText).IsRequired();
-                builder.Property(entity => entity.Filename).IsRequired();
-                builder.Property(entity => entity.S3Link);
-                builder.Property(entity => entity.Blob);
+                builder.Property(entity => entity.IsText)
+                    .IsRequired();
+                builder.Property(entity => entity.Filename)
+                    .IsRequired();
+                builder.Property(entity => entity.CreateTimestamp)
+                    .HasDefaultValueSql("current_timestamp")
+                    .IsRequired();
+                builder.Property(entity => entity.Blob)
+                    .IsRequired();
             });
             modelBuilder.Entity<Update>(builder =>
             {
                 builder.HasKey(e => e.UpdateId);
                 builder.Property(e => e.CommentText)
+                    .IsRequired();
+                builder.Property(e => e.CreateTimestamp)
+                    .HasDefaultValueSql("current_timestamp")
                     .IsRequired();
                 builder.HasOne(e => e.Document)
                     .WithOne(d => d!.Update)
@@ -41,8 +51,13 @@ namespace Cde.Data
             modelBuilder.Entity<Project>(builder =>
             {
                 builder.HasKey(entity => entity.ProjectId);
-                builder.Property(entity => entity.Name).IsRequired();
-                builder.Property(entity => entity.IsClosed).IsRequired();
+                builder.Property(entity => entity.Name)
+                    .IsRequired();
+                builder.Property(entity => entity.IsClosed)
+                    .IsRequired();
+                builder.Property(entity => entity.CreateTimestamp)
+                    .HasDefaultValueSql("current_timestamp")
+                    .IsRequired();
                 builder.HasMany(entity => entity.Updates)
                     .WithOne(update => update.Project)
                     .HasForeignKey(update => update.ProjectId);

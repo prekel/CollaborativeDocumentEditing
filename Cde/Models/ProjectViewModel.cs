@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,8 +14,10 @@ namespace Cde.Models
         public bool IsOwner { get; set; }
 
         public string OwnerEmail { get; set; }
-        
+
         public bool IsClosed { get; set; }
+        
+        public DateTimeOffset CreateTimestamp { get; set; }
 
         public ICollection<string> ParticipantEmails { get; set; }
 
@@ -26,6 +29,7 @@ namespace Cde.Models
             IsOwner = isOwner;
             OwnerEmail = ownerEmail;
             ParticipantEmails = participantEmails;
+            CreateTimestamp = project.CreateTimestamp;
         }
     }
 }

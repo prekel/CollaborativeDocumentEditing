@@ -3,15 +3,17 @@ using System;
 using Cde.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Cde.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210505100742_CreateTimestamp")]
+    partial class CreateTimestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,10 +111,8 @@ namespace Cde.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<DateTimeOffset>("CreateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("current_timestamp");
+                    b.Property<DateTimeOffset?>("CreateTimestamp")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Filename")
                         .IsRequired()
@@ -133,10 +133,8 @@ namespace Cde.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTimeOffset>("CreateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("current_timestamp");
+                    b.Property<DateTimeOffset?>("CreateTimestamp")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("boolean");
@@ -171,10 +169,8 @@ namespace Cde.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("current_timestamp");
+                    b.Property<DateTimeOffset?>("CreateTimestamp")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("DocumentId")
                         .HasColumnType("bigint");

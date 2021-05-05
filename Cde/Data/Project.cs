@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Cde.Data
@@ -10,6 +11,8 @@ namespace Cde.Data
         public string OwnerId { get; set; } = null!;
 
         public bool IsClosed { get; set; }
+
+        public DateTimeOffset CreateTimestamp { get; set; }
 
         public ApplicationUser? Owner { get; set; }
 
