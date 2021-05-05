@@ -23,23 +23,19 @@ namespace Cde.Pages.Projects
             _userService = userService;
         }
 
+        public CreateFileInputModel? CreateFileInputModel { get; set; }
+
+        public CreateFileTextInputModel? CreateFileTextInputModel { get; set; }
+
         public void OnGet()
         {
         }
 
-        public CreateFileInputModel? CreateFileInputModel { get; set; }
+        public async Task<IActionResult> OnPostFileAsync(CreateFileInputModel createFileInputModel) =>
+            await ProceedCreate(createFileInputModel);
 
-        public async Task<IActionResult> OnPostFileAsync(CreateFileInputModel createFileInputModel)
-        {
-            return await ProceedCreate(createFileInputModel);
-        }
-
-        public CreateFileTextInputModel? CreateFileTextInputModel { get; set; }
-
-        public async Task<IActionResult> OnPostFileTextAsync(CreateFileTextInputModel createFileTextInputModel)
-        {
-            return await ProceedCreate(createFileTextInputModel);
-        }
+        public async Task<IActionResult> OnPostFileTextAsync(CreateFileTextInputModel createFileTextInputModel) =>
+            await ProceedCreate(createFileTextInputModel);
 
         private async Task<IActionResult> ProceedCreate(UpdateInputModel initial)
         {

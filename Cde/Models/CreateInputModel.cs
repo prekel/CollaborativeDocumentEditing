@@ -6,7 +6,7 @@ namespace Cde.Models
     {
         public string ProjectName { get; set; }
     }
-    
+
     public record CreateFileInputModel : FileInputModel, ICreateFileInputModel
     {
         [Required]

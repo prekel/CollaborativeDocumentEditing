@@ -6,7 +6,8 @@ namespace Cde.Models
 {
     public abstract record UpdateInputModel
     {
-        [Required, StringLength(100)]
+        [Required]
+        [StringLength(100)]
         public string CommentText { get; set; }
     }
 

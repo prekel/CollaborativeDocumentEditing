@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -17,9 +16,9 @@ namespace Cde.Pages.Projects
     [Authorize]
     public class ProjectModel : PageModel
     {
+        private readonly IAuthorizationService _authService;
         private readonly ProjectService _projectService;
         private readonly UserManager<ApplicationUser> _userService;
-        private readonly IAuthorizationService _authService;
 
         public ProjectModel(ProjectService projectService, UserManager<ApplicationUser> userService,
             IAuthorizationService authService)
@@ -29,8 +28,14 @@ namespace Cde.Pages.Projects
             _authService = authService;
         }
 
-        public ProjectViewModel? Project { get; private set; } = null!;
+        public ProjectViewModel? Project { get; private set; }
         public ICollection<UpdateViewModel> Updates { get; private set; } = null!;
+
+        public CommentInputModel CommentCommand { get; set; } = null!;
+
+        public FileInputModel FileCommand { get; set; } = null!;
+
+        public FileTextInputModel FileTextCommand { get; set; } = null!;
 
 
         public async Task<IActionResult> OnGetDocumentAsync(long id, long documentId)
@@ -98,26 +103,14 @@ namespace Cde.Pages.Projects
             return RedirectToPage("View", new {id});
         }
 
-        public CommentInputModel CommentCommand { get; set; } = null!;
+        public async Task<IActionResult> OnPostCommentAsync(long id, CommentInputModel commentCommand) =>
+            await ProceedCommand(id, commentCommand);
 
-        public async Task<IActionResult> OnPostCommentAsync(long id, CommentInputModel commentCommand)
-        {
-            return await ProceedCommand(id, commentCommand);
-        }
+        public async Task<IActionResult> OnPostFileAsync(int id, FileInputModel fileCommand) =>
+            await ProceedCommand(id, fileCommand);
 
-        public FileInputModel FileCommand { get; set; } = null!;
-
-        public async Task<IActionResult> OnPostFileAsync(int id, FileInputModel fileCommand)
-        {
-            return await ProceedCommand(id, fileCommand);
-        }
-
-        public FileTextInputModel FileTextCommand { get; set; } = null!;
-
-        public async Task<IActionResult> OnPostFileTextAsync(int id, FileTextInputModel fileTextCommand)
-        {
-            return await ProceedCommand(id, fileTextCommand);
-        }
+        public async Task<IActionResult> OnPostFileTextAsync(int id, FileTextInputModel fileTextCommand) =>
+            await ProceedCommand(id, fileTextCommand);
 
         public async Task<IActionResult> OnPostCloseAsync(int id)
         {

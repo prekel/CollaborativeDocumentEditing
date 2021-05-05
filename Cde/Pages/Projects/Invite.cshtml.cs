@@ -14,9 +14,9 @@ namespace Cde.Pages.Projects
     [Authorize]
     public class InviteModel : PageModel
     {
+        private readonly IAuthorizationService _authService;
         private readonly ProjectService _projectService;
         private readonly UserManager<ApplicationUser> _userService;
-        private readonly IAuthorizationService _authService;
 
         public InviteModel(ProjectService projectService, UserManager<ApplicationUser> userService,
             IAuthorizationService authService)
@@ -28,6 +28,8 @@ namespace Cde.Pages.Projects
 
         [BindProperty]
         public InviteInputModel? InviteInputModel { get; set; }
+
+        public string? InviteParticipantResultMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -84,7 +86,5 @@ namespace Cde.Pages.Projects
 
             return Page();
         }
-
-        public string? InviteParticipantResultMessage { get; set; }
     }
 }

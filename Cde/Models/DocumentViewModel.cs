@@ -6,14 +6,6 @@ namespace Cde.Models
 {
     public record DocumentInfoViewModel
     {
-        public long DocumentId { get; set; }
-
-        public bool IsText { get; set; }
-
-        public string Filename { get; set; } = null!;
-
-        public DateTimeOffset CreateTimestamp { get; set; }
-
         public DocumentInfoViewModel(Document document)
         {
             DocumentId = document.DocumentId;
@@ -21,5 +13,13 @@ namespace Cde.Models
             Filename = document.Filename;
             CreateTimestamp = document.CreateTimestamp;
         }
+
+        public long DocumentId { get; set; }
+
+        public bool IsText { get; set; }
+
+        public string Filename { get; set; } = null!;
+
+        public DateTimeOffset CreateTimestamp { get; set; }
     }
 }

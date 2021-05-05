@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 using Cde.Data;
@@ -15,10 +16,7 @@ namespace Cde.Services
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public ProjectService(ApplicationDbContext context)
-        {
-            _dbContext = context;
-        }
+        public ProjectService(ApplicationDbContext context) => _dbContext = context;
 
         public async Task<Project?> GetProject(long projectId)
         {
@@ -104,7 +102,7 @@ namespace Cde.Services
             {
                 IsText = true,
                 Filename = textInputModel.FileName,
-                Blob = System.Text.Encoding.UTF8.GetBytes(textInputModel.DocumentText)
+                Blob = Encoding.UTF8.GetBytes(textInputModel.DocumentText)
             };
             await _dbContext.AddAsync(d);
             await _dbContext.SaveChangesAsync();
@@ -135,21 +133,11 @@ namespace Cde.Services
                 CommentText = updateInputModel.CommentText,
                 DocumentId = d?.DocumentId,
                 ProjectId = projectId,
-                AuthorId = createdBy.Id,
+                AuthorId = createdBy.Id
             };
             p.Updates!.Add(ret);
             await _dbContext.SaveChangesAsync();
             return ret;
-        }
-
-
-        public abstract record InviteParticipantResult
-        {
-            public record Ok : InviteParticipantResult;
-
-            public record AlreadyInvited : InviteParticipantResult;
-
-            public record UserNotExists : InviteParticipantResult;
         }
 
         public async Task<InviteParticipantResult> InviteParticipant(long projectId, string invitedEmail)
@@ -219,6 +207,16 @@ namespace Cde.Services
         {
             return await _dbContext.Documents
                 .SingleOrDefaultAsync(doc => doc.DocumentId == documentId);
+        }
+
+
+        public abstract record InviteParticipantResult
+        {
+            public record Ok : InviteParticipantResult;
+
+            public record AlreadyInvited : InviteParticipantResult;
+
+            public record UserNotExists : InviteParticipantResult;
         }
     }
 }

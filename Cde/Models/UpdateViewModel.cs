@@ -6,6 +6,17 @@ namespace Cde.Models
 {
     public record UpdateViewModel
     {
+        public UpdateViewModel(Update update, Document? document, string authorEmail, bool isAuthor)
+        {
+            UpdateId = update.UpdateId;
+            CommentText = update.CommentText;
+            DocumentInfo = document == null ? null : new DocumentInfoViewModel(document);
+            ProjectId = update.ProjectId;
+            IsAuthor = isAuthor;
+            AuthorEmail = authorEmail;
+            CreateTimestamp = update.CreateTimestamp;
+        }
+
         public long UpdateId { get; set; }
         public string CommentText { get; set; }
 
@@ -18,16 +29,5 @@ namespace Cde.Models
         public string AuthorEmail { get; set; }
 
         public DateTimeOffset CreateTimestamp { get; set; }
-
-        public UpdateViewModel(Update update, Document? document, string authorEmail, bool isAuthor)
-        {
-            UpdateId = update.UpdateId;
-            CommentText = update.CommentText;
-            DocumentInfo = document == null ? null : new DocumentInfoViewModel(document);
-            ProjectId = update.ProjectId;
-            IsAuthor = isAuthor;
-            AuthorEmail = authorEmail;
-            CreateTimestamp = update.CreateTimestamp;
-        }
     }
 }
