@@ -5,13 +5,28 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Projects</p>
+<a asp-page="Create" class="btn btn-primary" role="button">Create</a>
 
-<a asp-page="Create">Create</a>
-
-@foreach (var i in Model.Projects)
-{
-    <li>
-        <a asp-page="View" asp-route-id="@i.ProjectId">@i</a>
-    </li>
-}
+<div class="list-group">
+    @foreach (var i in Model.Projects)
+    {
+        <a asp-page="View" asp-route-id="@i.ProjectId" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@i.Name</h5>
+                <small class="text-muted">@i.CreateTimestamp</small>
+            </div>
+            <p class="mb-1">ProjectId: @i.ProjectId</p>
+            <p class="mb-1">OwnerEmail: @i.OwnerEmail</p>
+            <small class="text-muted">@i.ParticipantEmails.Count Participants</small>
+            <small class="text-muted">@i.UpdatesCount Updates</small>
+            @if (i.IsClosed)
+            {
+                <span class="badge badge-secondary">Closed</span>
+            }
+            @if (i.IsOwner)
+            {
+                <span class="badge badge-primary">Owner</span>
+            }
+        </a>
+    }
+</div>

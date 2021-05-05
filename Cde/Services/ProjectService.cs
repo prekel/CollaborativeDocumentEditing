@@ -28,9 +28,10 @@ namespace Cde.Services
             return await _dbContext.Projects
                 .Include(p => p.Owner)
                 .Include(p => p.InvitedParticipants)
+                .Include(p => p.Updates)
                 .Where(p => p.InvitedParticipants!.Any(ip => ip.Id == queriedBy.Id))
                 .Select(p1 => new ProjectViewModel(p1, p1.Owner!.Email,
-                    p1.InvitedParticipants!.Select(ip => ip.Email).ToList(), p1.OwnerId == queriedBy.Id))
+                    p1.InvitedParticipants!.Select(ip => ip.Email).ToList(), p1.OwnerId == queriedBy.Id, p1.Updates!.Count()))
                 .ToListAsync();
         }
 
@@ -173,6 +174,7 @@ namespace Cde.Services
             var project = await _dbContext.Projects
                 .Include(p => p.Owner)
                 .Include(p => p.InvitedParticipants)
+                .Include(p => p.Updates)
                 .SingleOrDefaultAsync(p => p.ProjectId == projectId);
 
             return project is null
@@ -180,7 +182,8 @@ namespace Cde.Services
                 : new ProjectViewModel(project,
                     project.Owner!.Email,
                     project.InvitedParticipants!.Select(ip => ip.Email).ToList(),
-                    project.OwnerId == queriedById);
+                    project.OwnerId == queriedById,
+                    project.Updates!.Count);
         }
 
         public async Task<Project> CreateProject(ApplicationUser author, ICreateFileInputModel createModel)

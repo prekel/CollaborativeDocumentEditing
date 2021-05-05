@@ -7,7 +7,7 @@ namespace Cde.Models
 {
     public record ProjectViewModel
     {
-        public ProjectViewModel(Project project, string ownerEmail, ICollection<string> participantEmails, bool isOwner)
+        public ProjectViewModel(Project project, string ownerEmail, ICollection<string> participantEmails, bool isOwner, int updatesCount)
         {
             ProjectId = project.ProjectId;
             Name = project.Name;
@@ -16,6 +16,7 @@ namespace Cde.Models
             OwnerEmail = ownerEmail;
             ParticipantEmails = participantEmails;
             CreateTimestamp = project.CreateTimestamp;
+            UpdatesCount = updatesCount;
         }
 
         public long ProjectId { get; set; }
@@ -26,6 +27,8 @@ namespace Cde.Models
         public string OwnerEmail { get; set; }
 
         public bool IsClosed { get; set; }
+        
+        public int UpdatesCount { get; set; }
 
         public DateTimeOffset CreateTimestamp { get; set; }
 

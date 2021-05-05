@@ -5,51 +5,111 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>@Model.Project.Name</p>
-
-<p>@Model.Project</p>
-
-<ul>
-    @foreach (var i in Model.Updates)
+<div class="jumbotron">
+    <h1 class="display-4">@Model.Project.Name</h1>
+    <p class="lead">ProjectId: @Model.Project.ProjectId</p>
+    <small class="text-muted">@Model.Project.CreateTimestamp</small>
+    @if (Model.Project.IsClosed)
     {
-        <li>
-            @i
-            @if (i.DocumentInfo is not null)
-            {
-                <a asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">document</a>
-            }
-        </li>
+        <span class="badge badge-secondary">Closed</span>
     }
-</ul>
-<p>Owner: </p>@Model.Project.OwnerEmail
-<p>Participants: </p>
-<ul>
-    @foreach (var p in Model.Project.ParticipantEmails)
+    @if (Model.Project.IsOwner)
     {
-        <li>@p</li>
+        <span class="badge badge-primary">Owner</span>
     }
-</ul>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col-sm">
+            <p>Participants: </p>
+            <ul>
+                @foreach (var p in Model.Project.ParticipantEmails)
+                {
+                    <li>@p</li>
+                }
+            </ul>
+        </div>
+        <div class="col-sm">
+            <p>Owner: </p>@Model.Project.OwnerEmail
+        </div>
+    </div>
+
+
+</div>
+
+<div>
+    @foreach (var i in Model.Updates.OrderBy(u => u.CreateTimestamp))
+    {
+        <div class="row">
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@i.AuthorEmail</h5>
+                        <p class="card-text">@i.CommentText</p>
+                        <small class="text-muted">@i.CreateTimestamp</small>
+                        @if (i.IsAuthor)
+                        {
+                            <span class="badge badge-primary">Author</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                @if (i.DocumentInfo is not null)
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@i.DocumentInfo.Filename</h5>
+                            <a class="btn btn-primary" asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">Download</a>
+                            @if (i.DocumentInfo.IsText)
+                            {
+                                <span class="badge badge-Info">Text</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
 
 @if (Model.Project.IsClosed)
 {
-    <p>Closed</p>
 }
 else
 {
-    <partial name="_CommentForm" model="Model.CommentCommand"/>
-
-    <partial name="_FileForm" model="Model.FileTextCommand"/>
-
-    <partial name="_FileTextForm" model="Model.FileTextCommand"/>
-
     @if (Model.Project.IsOwner)
     {
-        <a asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
+        <a class="btn btn-secondary" role="button" asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
 
         <form asp-page-handler="Close" method="post">
-            <button type="submit" class="btn btn-primary">Close</button>
+            <button type="submit" class="btn btn-danger">Close</button>
         </form>
     }
+
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Just Comment</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Upload File</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Text File</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <partial name="_CommentForm" model="Model.CommentCommand"/>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <partial name="_FileForm" model="Model.FileTextCommand"/>
+        </div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <partial name="_FileTextForm" model="Model.FileTextCommand"/>
+        </div>
+    </div>
 }
 
 @section Scripts {
