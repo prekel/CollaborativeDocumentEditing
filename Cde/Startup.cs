@@ -49,10 +49,13 @@ namespace Cde
             services.AddRazorPages();
 
             services.AddScoped<ProjectService>();
-
-            services.AddAuthorization(options =>
+            
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
             {
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
             });
+            services.AddAuthorization(options => { });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
