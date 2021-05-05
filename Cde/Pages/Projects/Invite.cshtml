@@ -1,0 +1,27 @@
+@page "{id}"
+@model Cde.Pages.Projects.InviteModel
+@{
+    ViewData["Title"] = "Invite to project";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form asp-page-handler="Invite" method="post">
+    <div class="form-group">
+        <label asp-for="InviteInputModel.NewParticipantEmailAddress" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="InviteInputModel.NewParticipantEmailAddress" class="form-control"/>
+            <span asp-validation-for="InviteInputModel.NewParticipantEmailAddress" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Invite</button>
+</form>
+
+@if (Model.InviteParticipantResultMessage is not null)
+{
+    <p>@Model.InviteParticipantResultMessage</p>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+    

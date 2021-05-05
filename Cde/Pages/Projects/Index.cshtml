@@ -1,4 +1,4 @@
-@page "/Projects"
+@page
 @model Cde.Pages.Projects.ProjectsModel
 @{
     ViewData["Title"] = "Projects";
@@ -7,10 +7,11 @@
 
 <p>Projects</p>
 
+<a asp-page="Create">Create</a>
+
 @foreach (var i in Model.Projects)
 {
     <li>
-        <a asp-page="/Projects/Project" asp-route-id="@i.ProjectId">ссылка</a>
-        <p>@i</p>
+        <a asp-page="View" asp-route-id="@i.ProjectId">@i</a>
     </li>
 }

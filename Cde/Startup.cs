@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authorization;
 
 using Cde.Data;
 using Cde.Services;
-using Cde.Authorization;
 
 namespace Cde
 {
@@ -51,12 +50,8 @@ namespace Cde
 
             services.AddScoped<ProjectService>();
 
-            services.AddScoped<IAuthorizationHandler, IsProjectParticipantOrOwnerHandler>();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(nameof(IsProjectParticipantOrOwner),
-                    policyBuilder => policyBuilder
-                        .AddRequirements(new IsProjectParticipantOrOwner()));
             });
         }
 

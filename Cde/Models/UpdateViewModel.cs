@@ -12,16 +12,17 @@ namespace Cde.Models
         public long ProjectId { get; set; }
 
         public bool IsAuthor { get; set; }
+
         public string AuthorEmail { get; set; }
 
-        public UpdateViewModel(Update update, bool isAuthor)
+        public UpdateViewModel(Update update, Document? document, string authorEmail, bool isAuthor)
         {
             UpdateId = update.UpdateId;
             CommentText = update.CommentText;
-            DocumentInfo = update.Document == null ? null : new DocumentInfoViewModel(update.Document);
+            DocumentInfo = document == null ? null : new DocumentInfoViewModel(document);
             ProjectId = update.ProjectId;
             IsAuthor = isAuthor;
-            AuthorEmail = update.Author.Email;
+            AuthorEmail = authorEmail;
         }
     }
 }

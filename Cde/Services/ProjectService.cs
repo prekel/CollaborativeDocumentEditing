@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Cde.Data;
 using Cde.Models;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cde.Services
@@ -21,13 +20,19 @@ namespace Cde.Services
             _dbContext = context;
         }
 
-        public async Task<ICollection<ProjectViewModel>> GetProjectViewModels(ApplicationUser createdBy)
+        public async Task<Project?> GetProject(long projectId)
+        {
+            return await _dbContext.Projects.SingleOrDefaultAsync(p => p.ProjectId == projectId);
+        }
+
+        public async Task<ICollection<ProjectViewModel>> GetProjectViewModels(ApplicationUser queriedBy)
         {
             return await _dbContext.Projects
                 .Include(p => p.Owner)
                 .Include(p => p.InvitedParticipants)
-                .Where(p => p.OwnerId == createdBy.Id || p.InvitedParticipants!.Any(ip => ip.Id == createdBy.Id))
-                .Select(p1 => new ProjectViewModel(p1, p1.OwnerId == createdBy.Id))
+                .Where(p => p.InvitedParticipants!.Any(ip => ip.Id == queriedBy.Id))
+                .Select(p1 => new ProjectViewModel(p1, p1.Owner!.Email,
+                    p1.InvitedParticipants!.Select(ip => ip.Email).ToList(), p1.OwnerId == queriedBy.Id))
                 .ToListAsync();
         }
 
@@ -36,25 +41,18 @@ namespace Cde.Services
         {
             return await _dbContext.Updates
                 .Include(u => u.Document)
+                .Include(u => u.Author)
                 .Where(u => u.ProjectId == projectId)
-                .Select(u => new UpdateViewModel(u, u.AuthorId == createdBy.Id))
+                .Select(u => new UpdateViewModel(u, u.Document, u.Author!.Email, u.AuthorId == createdBy.Id))
                 .ToListAsync();
         }
 
-        public async Task<Project> GetProjectWithParticipants(long projectId)
+        public async Task<bool> IsUserHasAccess(long projectId, string userId)
         {
             return await _dbContext.Projects
-                .Where(p => p.ProjectId == projectId)
                 .Include(p => p.InvitedParticipants)
-                .SingleAsync();
-        }
-
-        public async Task<ProjectViewModel> GetProjectInfo(long projectId, ApplicationUser createdBy)
-        {
-            return await _dbContext.Projects
-                .Where(p => p.ProjectId == projectId)
-                .Select(p1 => new ProjectViewModel(p1, p1.OwnerId == createdBy.Id))
-                .SingleAsync();
+                .Where(pr => pr.ProjectId == projectId)
+                .AnyAsync(pr => pr.InvitedParticipants!.Any(ip => ip.Id == userId));
         }
 
         private async Task<Document> CreateDocumentFromFileAsBlob(FileInputModel fileInputModel)
@@ -82,7 +80,7 @@ namespace Cde.Services
                 Blob = blob
             };
 
-            _dbContext.Add(d);
+            await _dbContext.AddAsync(d);
             await _dbContext.SaveChangesAsync();
             return d;
         }
@@ -100,7 +98,7 @@ namespace Cde.Services
                 Filename = textInputModel.FileName,
                 Blob = System.Text.Encoding.UTF8.GetBytes(textInputModel.DocumentText)
             };
-            _dbContext.Add(d);
+            await _dbContext.AddAsync(d);
             await _dbContext.SaveChangesAsync();
             return d;
         }
@@ -126,7 +124,7 @@ namespace Cde.Services
                 ProjectId = projectId,
                 AuthorId = createdBy.Id,
             };
-            p.Updates.Add(ret);
+            p.Updates!.Add(ret);
             await _dbContext.SaveChangesAsync();
             return ret;
         }
@@ -139,8 +137,6 @@ namespace Cde.Services
             public record AlreadyInvited : InviteParticipantResult;
 
             public record UserNotExists : InviteParticipantResult;
-
-            public record ProjectNotExists : InviteParticipantResult;
         }
 
         public async Task<InviteParticipantResult> InviteParticipant(long projectId, string invitedEmail)
@@ -150,7 +146,7 @@ namespace Cde.Services
                 .SingleOrDefaultAsync(p => p.ProjectId == projectId);
             if (project?.InvitedParticipants is null)
             {
-                return new InviteParticipantResult.ProjectNotExists();
+                throw new ApplicationException("Project not exist");
             }
 
             var invited = await _dbContext.Users
@@ -177,7 +173,26 @@ namespace Cde.Services
                 .Include(p => p.Owner)
                 .Include(p => p.InvitedParticipants)
                 .SingleOrDefaultAsync(p => p.ProjectId == projectId);
-            return project is null ? null : new ProjectViewModel(project, project.OwnerId == queriedById);
+
+            return project is null
+                ? null
+                : new ProjectViewModel(project,
+                    project.Owner!.Email,
+                    project.InvitedParticipants!.Select(ip => ip.Email).ToList(),
+                    project.OwnerId == queriedById);
+        }
+
+        public async Task<Project> CreateProject(ApplicationUser author, CreateInputModel createModel)
+        {
+            var project = new Project
+            {
+                Name = createModel.ProjectName,
+                OwnerId = author.Id,
+                InvitedParticipants = new List<ApplicationUser> {author}
+            };
+            await _dbContext.Projects.AddAsync(project);
+            await _dbContext.SaveChangesAsync();
+            return project;
         }
     }
 }

@@ -1,0 +1,17 @@
+@page
+@model Cde.Pages.Projects.CreateModel
+@{
+    ViewData["Title"] = "Create project";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form asp-page-handler="Invite" method="post">
+    <div class="form-group">
+        <label asp-for="CreateInputModel.ProjectName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CreateInputModel.ProjectName" class="form-control"/>
+            <span asp-validation-for="CreateInputModel.ProjectName" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

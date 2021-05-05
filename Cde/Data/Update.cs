@@ -9,9 +9,9 @@ namespace Cde.Data
         public Document? Document { get; set; }
 
         public long ProjectId { get; set; }
-        public Project Project { get; set; } = null!;
+        public Project? Project { get; set; }
 
-        public string AuthorId { get; set; } = null!;
-        public ApplicationUser Author { get; set; } = null!;
+        public string AuthorId { get; set; } 
+        public ApplicationUser? Author { get; set; } 
     }
 }

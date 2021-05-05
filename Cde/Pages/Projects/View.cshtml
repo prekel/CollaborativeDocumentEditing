@@ -1,0 +1,40 @@
+@page "{id}/{handler?}"
+@model Cde.Pages.Projects.ProjectModel
+@{
+    ViewData["Title"] = "Project";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>@Model.Project.Name</p>
+
+<p>@Model.Project</p>
+
+<ul>
+    @foreach (var i in Model.Updates)
+    {
+        <li>@i</li>
+    }
+</ul>
+<p>Owner: </p>@Model.Project.OwnerEmail
+<p>Participants: </p>
+<ul>
+    @foreach (var p in Model.Project.ParticipantEmails)
+    {
+        <li>@p</li>
+    }
+</ul>
+
+<partial name="_CommentForm" model="Model.CommentCommand"/>
+
+<partial name="_FileForm" model="Model.FileTextCommand"/>
+
+<partial name="_FileTextForm" model="Model.FileTextCommand"/>
+
+@if (Model.Project.IsOwner)
+{
+    <a asp-page="Invite" asp-route-id="@Model.Project.ProjectId">Invite</a>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
