@@ -39,7 +39,7 @@ namespace Cde.Data
                     .HasDefaultValueSql("current_timestamp")
                     .IsRequired();
                 builder.HasOne(e => e.Document)
-                    .WithOne(d => d!.Update)
+                    .WithOne(d => d!.Update!)
                     .HasForeignKey<Update>(e => e.DocumentId)
                     .IsRequired(false);
                 builder.HasOne(e => e.Author)
@@ -57,7 +57,7 @@ namespace Cde.Data
                     .HasDefaultValueSql("current_timestamp")
                     .IsRequired();
                 builder.HasMany(entity => entity.Updates)
-                    .WithOne(update => update.Project)
+                    .WithOne(update => update.Project!)
                     .HasForeignKey(update => update.ProjectId);
                 builder.HasOne(e => e.Owner)
                     .WithMany()

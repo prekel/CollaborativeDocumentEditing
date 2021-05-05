@@ -16,6 +16,7 @@ namespace Cde.Models
     {
         public bool IsText { get; set; }
 
+        [StringLength(100)]
         public string? FileName { get; set; }
 
         [Required]
@@ -26,6 +27,7 @@ namespace Cde.Models
     public record FileTextInputModel : UpdateInputModel
     {
         [Required]
+        [StringLength(100)]
         public string FileName { get; set; }
 
         public string DocumentText { get; set; }
