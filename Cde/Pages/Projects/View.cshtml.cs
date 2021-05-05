@@ -56,14 +56,14 @@ namespace Cde.Pages.Projects
 
             var blob = doc.Blob;
 
-            var res = new FileContentResult(blob,
-                doc.IsText
-                    ? MediaTypeNames.Text.Plain
-                    : MediaTypeNames.Application.Octet)
-            {
-                FileDownloadName = doc.Filename,
-                LastModified = doc.CreateTimestamp
-            };
+
+            var res = doc.IsText
+                ? new FileContentResult(blob, MediaTypeNames.Text.Plain)
+                : new FileContentResult(blob, MediaTypeNames.Application.Octet)
+                {
+                    FileDownloadName = doc.Filename,
+                    LastModified = doc.CreateTimestamp
+                };
 
             return res;
         }

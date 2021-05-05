@@ -59,7 +59,9 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">@i.DocumentInfo.Filename</h5>
-                            <a class="btn btn-primary" asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">Download</a>
+                            <a class="btn btn-primary" asp-page-handler="Document" asp-route-documentId="@i.DocumentInfo.DocumentId">
+                                @(i.DocumentInfo.IsText ? "Open" : "Download")
+                            </a>
                             @if (i.DocumentInfo.IsText)
                             {
                                 <span class="badge badge-Info">Text</span>
@@ -115,3 +117,4 @@ else
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>
 }
+
